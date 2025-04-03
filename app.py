@@ -4,6 +4,7 @@ from PIL import Image
 import base64
 import io
 import os
+import traceback
 
 app = Flask(__name__)
 
@@ -38,7 +39,10 @@ def analyze():
 
         return jsonify(result)
 
+
     except Exception as e:
+        print("🔥 에러 발생:", str(e))
+        traceback.print_exc()  # 전체 스택트레이스 출력
         return jsonify({'error': str(e)}), 500
 
 def extract_field(text, keywords):
