@@ -4,7 +4,7 @@ from PIL import Image
 import base64
 import io
 
-# ✅ Tesseract 실행 경로 직접 지정
+# ✅ Render 서버에서 Tesseract 경로 명시
 pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 
 app = Flask(__name__)
@@ -23,7 +23,7 @@ def analyze():
         # OCR 실행
         extracted_text = pytesseract.image_to_string(image, lang='kor+eng')
 
-        # 필드 추출
+        # 간단한 필드 추출 로직 (예시)
         result = {
             "이름": extract_field(extracted_text, ["이름"]),
             "생년월일": extract_field(extracted_text, ["생년월일", "생년월", "생일"]),
@@ -36,6 +36,8 @@ def analyze():
 
         return jsonify(result)
     except Exception as e:
+        # ✅ 서버 로그에 에러 출력
+        print("❌ 예외 발생:", str(e))
         return jsonify({'error': str(e)}), 500
 
 def extract_field(text, keywords):
