@@ -5,7 +5,14 @@ app = Flask(__name__)
 @app.route('/analyze', methods=['POST'])
 def analyze():
     try:
-        # 테스트용 더미 데이터 반환
+        data = request.get_json()
+        print("✅ 요청 도착, 데이터:", data)
+
+        # 필드가 없으면 에러
+        if not data or 'image' not in data:
+            return jsonify({'error': 'No image data provided'}), 400
+
+        # 응답 테스트용 더미 데이터
         result = {
             "이름": "홍길동",
             "생년월일": "1990-01-01",
@@ -34,10 +41,12 @@ def analyze():
                 "- 회복 강화를 위한 저강도 호흡 운동 및 명상 5분 포함\n"
             )
         }
+
         return jsonify(result)
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("❌ 서버 오류:", str(e))
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=7860)
